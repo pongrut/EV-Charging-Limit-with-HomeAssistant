@@ -1,124 +1,89 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2580
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red107\green0\blue1;\red255\green255\blue255;\red0\green0\blue0;
-\red15\green112\blue1;\red0\green0\blue255;\red144\green1\blue18;\red157\green0\blue210;\red19\green118\blue70;
-}
-{\*\expandedcolortbl;;\cssrgb\c50196\c0\c0;\cssrgb\c100000\c100000\c100000;\cssrgb\c0\c0\c0;
-\cssrgb\c0\c50196\c0;\cssrgb\c0\c0\c100000;\cssrgb\c63922\c8235\c8235;\cssrgb\c68627\c0\c85882;\cssrgb\c3529\c52549\c34510;
-}
-\paperw11900\paperh16840\margl1440\margr1440\vieww41140\viewh27920\viewkind0
-\deftab720
-\pard\pardeftab720\sl480\partightenfactor0
+sensor:
+  # EV Charger Power Consumption Sensor
+  - platform: template
+    sensors:
+      ev_power_consumption:
+        friendly_name: "EV Charger Power Consumption"
+        value_template: >-
+          {{(state_attr('switch.sonoff_1000d68c75', 'power'))|  float / 1000 | round(2)}}
+        unit_of_measurement: "kWh"
+        attribute_templates:
+          current: >-
+            {{ state_attr('switch.sonoff_1000d68c75', 'current') | float | round(2) }}
+          voltage: >-
+            {{ ( state_attr('switch.sonoff_1000d68c75', 'voltage'))| int}}
+          local: >-
+            "{{ state_attr('switch.sonoff_1000d68c75', 'local') }}"
+          state_class: >-
+            measurement
+          last_reset: >-
+            1970-01-01T00:00:00+00:00
+          device_class: >-
+            energy
+  # EV Charger Power Consumption Stat Sensor
+  # Calculate statistics delivered power and
+  # every max_age (seconds) data will be completely new
+  - platform: statistics
+    name: EV Charger Power Stats
+    entity_id: sensor.ev_power_consumption
+    # Size of the sampling. If the limit is reached then the values are rotated.
+    sampling_size: 60
+    # Maximum age of measurements. Setting this to a time interval will cause older values to be discarded.
+    # Use duration_in_minutes * sampling_size
+    max_age: 300
+  # Average EV Charger Power Consumption Sensor
+  # Calculate average delivered power
+  - platform: template
+    sensors:
+      average_ev_power:
+        friendly_name: Average EV Charger Power Delivered
+        value_template: "{{ state_attr('sensor.ev_charger_power_stats','mean') }}"
 
-\f0\fs36 \cf2 \cb3 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 sensor\cf4 \strokec4 :\cb1 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 # EV Charger Power Consumption Sensor\cf4 \cb1 \strokec4 \
-\cb3   - \cf2 \strokec2 platform\cf4 \strokec4 : \cf6 \strokec6 template\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 sensors\cf4 \strokec4 :\cb1 \
-\cb3       \cf2 \strokec2 ev_power_consumption\cf4 \strokec4 :\cb1 \
-\cb3         \cf2 \strokec2 friendly_name\cf4 \strokec4 : \cf7 \strokec7 "EV Charger Power Consumption"\cf4 \cb1 \strokec4 \
-\cb3         \cf2 \strokec2 value_template\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6           \{\{(state_attr('switch.sonoff_1000d68c75', 'power'))|  float / 1000 | round(2)\}\}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3         \cf2 \strokec2 unit_of_measurement\cf4 \strokec4 : \cf7 \strokec7 "kWh"\cf4 \cb1 \strokec4 \
-\cb3         \cf2 \strokec2 attribute_templates\cf4 \strokec4 :\cb1 \
-\cb3           \cf2 \strokec2 current\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6             \{\{ state_attr('switch.sonoff_1000d68c75', 'current') | float | round(2) \}\}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3           \cf2 \strokec2 voltage\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6             \{\{ ( state_attr('switch.sonoff_1000d68c75', 'voltage'))| int\}\}\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3           \cf2 \strokec2 local\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6             "\{\{ state_attr('switch.sonoff_1000d68c75', 'local') \}\}"\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3           \cf2 \strokec2 state_class\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6             measurement\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3           \cf2 \strokec2 last_reset\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6             1970-01-01T00:00:00+00:00\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3           \cf2 \strokec2 device_class\cf4 \strokec4 : \cf8 \strokec8 >\cf6 \strokec6 -\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf6 \cb3 \strokec6             energy\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 # EV Charger Power Consumption Stat Sensor\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # Calculate statistics delivered power and\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # every max_age (seconds) data will be completely new\cf4 \cb1 \strokec4 \
-\cb3   - \cf2 \strokec2 platform\cf4 \strokec4 : \cf6 \strokec6 statistics\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 name\cf4 \strokec4 : \cf6 \strokec6 EV Charger Power Stats\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 entity_id\cf4 \strokec4 : \cf6 \strokec6 sensor.ev_power_consumption\cf4 \cb1 \strokec4 \
-\cb3     \cf5 \strokec5 # Size of the sampling. If the limit is reached then the values are rotated.\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 sampling_size\cf4 \strokec4 : \cf9 \strokec9 60\cf4 \cb1 \strokec4 \
-\cb3     \cf5 \strokec5 # Maximum age of measurements. Setting this to a time interval will cause older values to be discarded.\cf4 \cb1 \strokec4 \
-\cb3     \cf5 \strokec5 # Use duration_in_minutes * sampling_size\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 max_age\cf4 \strokec4 : \cf9 \strokec9 300\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # Average EV Charger Power Consumption Sensor\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # Calculate average delivered power\cf4 \cb1 \strokec4 \
-\cb3   - \cf2 \strokec2 platform\cf4 \strokec4 : \cf6 \strokec6 template\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 sensors\cf4 \strokec4 :\cb1 \
-\cb3       \cf2 \strokec2 average_ev_power\cf4 \strokec4 :\cb1 \
-\cb3         \cf2 \strokec2 friendly_name\cf4 \strokec4 : \cf6 \strokec6 Average EV Charger Power Delivered\cf4 \cb1 \strokec4 \
-\cb3         \cf2 \strokec2 value_template\cf4 \strokec4 : \cf7 \strokec7 "\{\{ state_attr('sensor.ev_charger_power_stats','mean') \}\}"\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\sl480\partightenfactor0
-\cf5 \cb3 \strokec5 ##\cf4 \cb1 \strokec4 \
-\cf5 \cb3 \strokec5 # Number Variables\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf2 \cb3 \strokec2 input_number\cf4 \strokec4 :\cb1 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 # Current State of Charge\cf4 \cb1 \strokec4 \
-\cb3   \cf2 \strokec2 current_soc\cf4 \strokec4 :\cb1 \
-\cb3     \cf2 \strokec2 name\cf4 \strokec4 : \cf6 \strokec6 Current State of Charge (%)\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 initial\cf4 \strokec4 : \cf9 \strokec9 0\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 min\cf4 \strokec4 : \cf9 \strokec9 0\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 max\cf4 \strokec4 : \cf9 \strokec9 100\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 step\cf4 \strokec4 : \cf9 \strokec9 1\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 mode\cf4 \strokec4 : \cf6 \strokec6 box\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # Start Stat of Charge\cf4 \cb1 \strokec4 \
-\cb3   \cf2 \strokec2 start_soc\cf4 \strokec4 :\cb1 \
-\cb3     \cf2 \strokec2 name\cf4 \strokec4 : \cf6 \strokec6 Start State of Charge (%)\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 initial\cf4 \strokec4 : \cf9 \strokec9 0\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 min\cf4 \strokec4 : \cf9 \strokec9 0\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 max\cf4 \strokec4 : \cf9 \strokec9 100\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 step\cf4 \strokec4 : \cf9 \strokec9 1\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 mode\cf4 \strokec4 : \cf6 \strokec6 box\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # Charging Limit\cf4 \cb1 \strokec4 \
-\cb3   \cf2 \strokec2 target_soc\cf4 \strokec4 :\cb1 \
-\cb3     \cf2 \strokec2 name\cf4 \strokec4 : \cf6 \strokec6 Target State of Charge (%)\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 initial\cf4 \strokec4 : \cf9 \strokec9 80\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 min\cf4 \strokec4 : \cf9 \strokec9 0\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 max\cf4 \strokec4 : \cf9 \strokec9 100\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 step\cf4 \strokec4 : \cf9 \strokec9 5\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # EV Battery Capacity\cf4 \cb1 \strokec4 \
-\cb3   \cf2 \strokec2 battery_size\cf4 \strokec4 :\cb1 \
-\cb3     \cf2 \strokec2 name\cf4 \strokec4 : \cf6 \strokec6 Battery Size\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 initial\cf4 \strokec4 : \cf9 \strokec9 50.3\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 min\cf4 \strokec4 : \cf9 \strokec9 0\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 max\cf4 \strokec4 : \cf9 \strokec9 100\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 step\cf4 \strokec4 : \cf9 \strokec9 0.1\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 mode\cf4 \strokec4 : \cf6 \strokec6 box\cf4 \cb1 \strokec4 \
-\cb3   \cf5 \strokec5 # Duration for %SOC Calculation\cf4 \cb1 \strokec4 \
-\cb3   \cf2 \strokec2 duration_in_minutes\cf4 \strokec4 :\cb1 \
-\cb3     \cf2 \strokec2 name\cf4 \strokec4 : \cf6 \strokec6 Calulation Duration\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 initial\cf4 \strokec4 : \cf9 \strokec9 5\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 min\cf4 \strokec4 : \cf9 \strokec9 1\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 max\cf4 \strokec4 : \cf9 \strokec9 9\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 step\cf4 \strokec4 : \cf9 \strokec9 1\cf4 \cb1 \strokec4 \
-\cb3     \cf2 \strokec2 mode\cf4 \strokec4 : \cf6 \strokec6 box\cf4 \cb1 \strokec4 \
-\
-\pard\pardeftab720\sl480\partightenfactor0
-\cf5 \cb3 \strokec5 ##\cf4 \cb1 \strokec4 \
-\cf5 \cb3 \strokec5 # Timer\cf4 \cb1 \strokec4 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf2 \cb3 \strokec2 timer\cf4 \strokec4 :\cb1 \
-\pard\pardeftab720\sl480\partightenfactor0
-\cf4 \cb3   \cf5 \strokec5 # Calculate %SOC Every >> Duration 5 minutes\cf4 \cb1 \strokec4 \
-\cb3   \cf2 \strokec2 charger_timer\cf4 \strokec4 :\cb1 \
-}
+##
+# Number Variables
+input_number:
+  # Current State of Charge
+  current_soc:
+    name: Current State of Charge (%)
+    initial: 0
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  # Start Stat of Charge
+  start_soc:
+    name: Start State of Charge (%)
+    initial: 0
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+  # Charging Limit
+  target_soc:
+    name: Target State of Charge (%)
+    initial: 80
+    min: 0
+    max: 100
+    step: 5
+  # EV Battery Capacity
+  battery_size:
+    name: Battery Size
+    initial: 50.3
+    min: 0
+    max: 100
+    step: 0.1
+    mode: box
+  # Duration for %SOC Calculation
+  duration_in_minutes:
+    name: Calulation Duration
+    initial: 5
+    min: 1
+    max: 9
+    step: 1
+    mode: box
+
+##
+# Timer
+timer:
+  # Calculate %SOC Every >> Duration 5 minutes
+  charger_timer:
