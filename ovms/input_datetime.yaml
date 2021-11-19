@@ -1,0 +1,11 @@
+### input_datetime.yaml
+# Datetime Variables
+start_charge_date_time:
+  name: Start Charge Date Time
+  has_date: true
+  has_time: true
+stopped_charge_date_time:
+  name: Stopped Charge Date Time
+  has_date: true
+  has_time: true
+  initial: "1970-01-01 00:00"
