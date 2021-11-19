@@ -1,0 +1,18 @@
+### input_boolean.yaml
+# Boolean Variables
+  # EV Charger Enable Flag
+  enable_ev_charger:
+    name: EV Charger Controller Status
+    initial: off
+  bedroom_confort_temp:
+    name: Bedroom Confort Temperature Flag
+    initial: off
+  front_door:
+    name: Front Door Sensor
+    initial: off
+  back_door:
+    name: Back Door Sensor
+    initial: off
+  loft_door:
+    name: Loft Door Sensor
+    initial: off
