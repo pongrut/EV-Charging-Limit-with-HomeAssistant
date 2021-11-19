@@ -1,0 +1,49 @@
+script_ovms_drl_on:
+  alias: script_ovms_drl_on
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: ovms/pongrut/MG-EP/client/homeassistant/command/
+      payload: drl on
+  mode: single
+  icon: hass:car-light-high
+script_ovms_drl_off:
+  alias: script_ovms_drl_off
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: ovms/pongrut/MG-EP/client/homeassistant/command/
+      payload: drl off
+  mode: single
+  icon: hass:car-light-dimmed
+'1632642264104':
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: ovms/pongrut/MG-EP/client/homeassistant/active
+      payload: '1'
+  mode: single
+  alias: script_ovme_server3_ heartbeats
+  icon: hass:car-connected
+'1632645551231':
+  alias: script_soc_notification_cherd_iphone_stop
+  sequence:
+  - service: notify.mobile_app_cherd_iphone
+    data:
+      message: Charging {{states('sensor.ovms_charge_state')}} at SoC {{states('sensor.ovms_state_of_charge')}}%,
+        SoH {{states('sensor.ovms_state_of_health')}}% and Estimated range {{states('sensor.ovms_estimated_range')}}
+        km.
+      title: Home Assistant Notification
+  mode: single
+  icon: hass:cellphone-message
+script_soc_notification_cherd_iphone_start:
+  alias: script_soc_notification_cherd_iphone_start
+  sequence:
+  - service: notify.mobile_app_cherd_iphone
+    data:
+      message: Charging started at SoC {{states('sensor.ovms_state_of_charge')}}%,
+        SoH {{states('sensor.ovms_state_of_health')}}% and Estimated range {{states('sensor.ovms_estimated_range')}}
+        km.
+      title: Home Assistant Notification
+  mode: single
+  icon: hass:cellphone-message
